@@ -9,10 +9,11 @@ export const loader = async () => {
 
 export default function CurrentWeekLayout() {
   const { data } = useLoaderData<typeof loader>();
+  const entries = new Set(data.map((u: any) => u.author));
   return (
     <div className="bg-white h-screen flex">
       <LeftSide
-        entries={data.map((u: any) => ({ name: u.author, id: u.author }))}
+        entries={Array.from(entries).map((u: any) => ({ name: u, id: u }))}
       />
       <main className="flex-1">
         <Outlet />

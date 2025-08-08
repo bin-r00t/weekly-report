@@ -1,5 +1,6 @@
 import { Form, redirect } from "react-router";
 import { writeData } from "~/db/utils";
+import { v4 as uuidv4 } from "uuid";
 
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
@@ -7,8 +8,10 @@ export const action = async ({ request }: { request: Request }) => {
   const items = formData.get("items");
   const author = formData.get("author");
   const createdAt = new Date().toISOString();
+  const id = uuidv4();
   const data = {
     project,
+    id,
     items,
     author,
     createdAt,
