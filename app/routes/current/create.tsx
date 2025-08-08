@@ -1,6 +1,7 @@
-import { Form, redirect } from "react-router";
+import { Form, redirect, useNavigate } from "react-router";
 import { writeData } from "~/db/utils";
 import { v4 as uuidv4 } from "uuid";
+import { useEffect, useState } from "react";
 
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
@@ -21,6 +22,16 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 export default function CurrentWeekCreate() {
+  const navigate = useNavigate();
+  const [user, setUser] = useState("");
+
+  useEffect(() => {
+    if (!localStorage.getItem("user")) {
+      navigate("/login");
+    }
+    setUser(localStorage.getItem("user") as string);
+  }, []);
+
   return (
     <div className="create-page h-screen p-6 flex flex-col gap-6">
       <h1>Create</h1>
@@ -28,7 +39,7 @@ export default function CurrentWeekCreate() {
         className="md:w-1/2 border border-gray-400 rounded-md p-3 flex flex-col gap-3"
         method="post"
       >
-        <input type="text" hidden name="author" value={"liubin"} />
+        <input type="text" hidden name="author" value={user} />
         <div className="form-item flex flex-col gap-3">
           <label htmlFor="project" className="text-gray-400 text-sm capitalize">
             project name
