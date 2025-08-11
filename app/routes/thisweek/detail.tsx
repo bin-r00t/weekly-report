@@ -12,7 +12,6 @@ function getMondayTime() {
   const now = new Date();
   const day = now.getDay();
   const diff = now.getDay() - day + (day === 0 ? -6 : 1);
-  console.log("diff", day, diff, now.getDate());
   return diff === 1 ? now.setHours(0, 0, 0, 0) : new Date(now.setDate(diff));
 }
 
@@ -25,15 +24,13 @@ export const loader = async ({ params }: { params: { id: string } }) => {
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const id = formData.get("id") as string;
-  console.log("delete", id);
   await deleteDataById(id);
-  return redirect("/current");
+  return redirect("/thisweek");
 };
 
 export default function CurrentWeekDetail() {
   const { id } = useParams();
   const { data, thisWeekData } = useLoaderData<typeof loader>();
-  console.log("data", data);
   return (
     <>
       <LeftSide entries={thisWeekData} />
