@@ -18,12 +18,7 @@ export default [
     layout("./routes/thisweek/layout.tsx", [
       index("./routes/thisweek/index.tsx"),
       route("create", "./routes/thisweek/create.tsx"),
-      route(':id', './routes/thisweek/detail.tsx')
+      route(":id", "./routes/thisweek/detail.tsx"),
     ]),
-    // layout('./routes/current/layout.tsx', [
-    //   index('./routes/current/index.tsx'),
-    //   route('create', './routes/current/create.tsx'),
-    //   route(':id', './routes/current/detail.tsx')
-    // ])
   ]),
 ] satisfies RouteConfig;
