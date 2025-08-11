@@ -7,7 +7,7 @@ export default function Login() {
     const formData = new FormData(e.target as HTMLFormElement);
     const username = formData.get("username");
     localStorage.setItem("user", username as string);
-    navigate("/current");
+    navigate("/thisweek");
   };
   return (
     <div className="bg-neutral-100 h-screen flex items-center justify-center">

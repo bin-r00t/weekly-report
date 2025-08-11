@@ -19,10 +19,16 @@ export default function Home() {
           历史周报
         </Link>
         <Link
-          to="/current"
+          to="thisweek"
           className="bg-gray-200 px-9 cursor-pointer text-gray-600 rounded-md text-center p-3 transition hover:text-white hover:bg-gray-600"
         >
           本周周报
+        </Link>
+        <Link
+          to="/login"
+          className="bg-gray-200 px-9 cursor-pointer text-gray-600 rounded-md text-center p-3 transition hover:text-white hover:bg-gray-600"
+        >
+          Login
         </Link>
       </div>
     </div>
