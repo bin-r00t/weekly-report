@@ -9,13 +9,34 @@ export const readData = async () => {
   }
 };
 
+export const readCurrentWeekData = async () => {
+  try {
+    let data = await readFile("data.json", "utf-8");
+    const now = new Date();
+    const day = now.getDay();
+    const diff = now.getDay() - day + (day === 0 ? -6 : 1);
+    const timestamp =
+      diff === 1 ? now.setHours(0, 0, 0, 0) : new Date(now.setDate(diff)).getTime();
+    let adata = JSON.parse(data);
+    return adata.filter((item: any) => {
+      const itemTimestamp = new Date(item.createdAt).getTime();
+      return itemTimestamp >= timestamp;
+    });
+  } catch (error) {
+    return [];
+  }
+};
+
 export const writeData = async (data: any) => {
   const oldData = await readData();
   const newData = [...oldData, data];
   await writeFile("data.json", JSON.stringify(newData));
 };
 
-export const readDataByAuthor = async (author: string, date: string | Date) => {
+export const readDataByAuthor = async (
+  author: string,
+  date: string | Date | number
+) => {
   const data = await readData();
   const timestamp =
     date instanceof Date ? date.getTime() : new Date(date).getTime();

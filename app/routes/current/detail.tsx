@@ -2,11 +2,13 @@ import { Form, Link, redirect, useLoaderData, useParams } from "react-router";
 import { deleteDataById, readDataByAuthor } from "~/db/utils";
 // import type { Route } from "./+types/detail";
 
+// 获取周一凌晨0点的时间戳
 function getMondayTime() {
   const now = new Date();
   const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(now.setDate(diff));
+  const diff = now.getDay() - day + (day === 0 ? -6 : 1);
+  console.log("diff", day,diff,now.getDate());
+  return diff === 1 ? now.setHours(0, 0, 0, 0) : new Date(now.setDate(diff));
 }
 
 export const loader = async ({ params }: { params: { id: string } }) => {
