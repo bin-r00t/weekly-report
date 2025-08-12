@@ -2,7 +2,7 @@ import { Form, redirect, useLoaderData, useNavigate } from "react-router";
 import { readCurrentWeekData, writeData } from "~/db/utils";
 import { v4 as uuidv4 } from "uuid";
 import LeftSide from "../leftside/LeftSide";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const loader = async () => {
   const data = await readCurrentWeekData();
@@ -29,17 +29,26 @@ export const action = async ({ request }: { request: Request }) => {
 };
 
 export default function ThisWeekCreate() {
+  const editorRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const { data } = useLoaderData<typeof loader>();
 
-  useEffect(() => {
-    if (!localStorage.getItem("user")) {
-      navigate("/login");
-    }
-    setUser(localStorage.getItem("user") as string);
-  }, []);
+  const [content, setContent] = useState("");
 
+  useEffect(() => {
+    // 确保在客户端运行
+    if (typeof window !== "undefined") {
+      if (!localStorage.getItem("user")) {
+        navigate("/login");
+      }
+      setUser(localStorage.getItem("user") as string);
+    }
+  }, [navigate]);
+
+  function onUpdateHiddenInput() {
+    setContent(editorRef.current?.innerHTML || "");
+  }
   return (
     <>
       <LeftSide entries={data} />
@@ -49,7 +58,7 @@ export default function ThisWeekCreate() {
           className="md:w-1/2 border border-gray-400 rounded-md p-3 flex flex-col gap-3"
           method="post"
         >
-          <input type="text" hidden name="author" value={user} />
+          <input type="text" hidden name="author" value={user} readOnly />
           <div className="form-item flex flex-col gap-3">
             <label
               htmlFor="project"
@@ -68,12 +77,19 @@ export default function ThisWeekCreate() {
             <label htmlFor="items" className="text-gray-400 text-sm capitalize">
               Done Items
             </label>
-            <textarea
+            {/* <textarea
               name="items"
               id="items"
               rows={9}
               className="p-2 px-3 outline outline-gray-400 rounded-md"
-            ></textarea>
+            ></textarea> */}
+            <div
+              ref={editorRef}
+              className="editor min-h-32 p-2 px-3 outline outline-gray-400 rounded-md"
+              contentEditable={true}
+              onInput={onUpdateHiddenInput}
+            ></div>
+            <input type="hidden" name="items" value={content} />
           </div>
           <div className="form-item flex flex-col gap-3">
             <button

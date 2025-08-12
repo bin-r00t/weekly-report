@@ -7,6 +7,16 @@ import {
 import LeftSide from "../leftside/LeftSide";
 // import type { Route } from "./+types/detail";
 
+// 确保日期格式在服务器端和客户端一致
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).replace(/\//g, '-');
+}
+
 // 获取周一凌晨0点的时间戳
 function getMondayTime() {
   const now = new Date();
@@ -57,7 +67,7 @@ export default function CurrentWeekDetail() {
             >
               <h2 className="text-lg font-bold">{u.project}</h2>
               <p className="text-sm text-gray-500">
-                {u.createdAt.slice(0, 10)}
+                {formatDate(u.createdAt)}
               </p>
               <p className="text-sm text-gray-500">{u.items}</p>
               <Form method="delete">
