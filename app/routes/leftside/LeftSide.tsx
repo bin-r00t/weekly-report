@@ -5,7 +5,7 @@ import { Link, NavLink, useLoaderData, useRouteLoaderData } from "react-router";
 export default function LeftSide({ entries }: { entries: any[] }) {
   const [menus, setMenus] = useState<any>([]);
   useEffect(() => {
-    const ms: any[] = []
+    const ms: any[] = [];
     entries.forEach((e) => {
       if (ms.find((m: any) => m.author === e.author)) {
         return;
@@ -16,12 +16,100 @@ export default function LeftSide({ entries }: { entries: any[] }) {
   }, [entries]);
 
   const onExport = () => {
-    const data = JSON.stringify(entries);
-    const blob = new Blob([data], { type: "application/json" });
+    const cardsInPage = document.querySelectorAll(".card");
+    const cards = Array.from(cardsInPage);
+    let text = `
+办公小组周报-${new Date().toLocaleDateString()}
+报送人: Admin
+
+一、本周主要工作概述
+\n`;
+
+    // 根据作者 处理工作内容
+    const authorMap = new Map<string, any>();
+    const all = cards.map((card) => {
+      return {
+        title: card.querySelector("h2")?.textContent,
+        author: card
+          .querySelector(".author")
+          ?.textContent?.replace("作者: ", ""),
+        role: card.querySelector(".role")?.textContent,
+        content: card
+          .querySelector(".content")
+          ?.innerHTML.replaceAll("</div>", "")
+          .replaceAll("<div>", "\n"),
+        plan: card.querySelector(".plans")?.textContent,
+      };
+    });
+
+    all.forEach((item) => {
+      if (!item.author) {
+        return;
+      }
+      if (!authorMap.has(item.author)) {
+        authorMap.set(item.author, [item]);
+      } else {
+        authorMap.set(item.author, [...authorMap.get(item.author), item]);
+      }
+    });
+
+    // frontend role 处理
+    text += `\n前端\n`;
+    authorMap.forEach((items, author) => {
+      console.log("items", items);
+      if (items[0].role === "前端") {
+        text += `\n${author}\n`;
+        items.forEach((item: any) => {
+          text += `项目: ${item.title}\n`;
+          text += `${item.content}\n`;
+        });
+        text += `\n\n`;
+      }
+    });
+
+    // backend role 处理
+    text += `\n后端\n`;
+    authorMap.forEach((items, author) => {
+      if (items[0].role === "后端") {
+        text += `\n${author}\n`;
+        items.forEach((item: any) => {
+          text += `项目: ${item.title}\n`;
+          text += `${item.content}\n`;
+        });
+        text += `\n\n`;
+      }
+    });
+
+    // plans
+    text += `
+二、下周计划
+\n`;
+
+    // 按照项目划分计划
+    let projMap = new Map<string, any>();
+    all.forEach((item: any) => {
+      if (item.plan && item.title) {
+        if (!projMap.has(item.title)) {
+          projMap.set(item.title, [item]);
+        } else {
+          projMap.set(item.title, [...projMap.get(item.title), item]);
+        }
+      }
+    });
+    projMap.forEach((items, title) => {
+      text += `项目: ${title}\n`;
+      items.forEach((item: any, index: number) => {
+        text += `${index + 1}. ${item.plan}\n`;
+      });
+      text += `\n`;
+    });
+
+    // const data = JSON.stringify(entries);
+    const blob = new Blob([text], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "data.json";
+    a.download = "data.txt";
     a.click();
   };
   return (

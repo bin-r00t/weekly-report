@@ -1,20 +1,29 @@
-import { Form, Link, redirect, useLoaderData, useParams } from "react-router";
+import {
+  Form,
+  Link,
+  Navigate,
+  redirect,
+  useLoaderData,
+  useParams,
+} from "react-router";
 import {
   deleteDataById,
   readCurrentWeekData,
   readDataByAuthor,
 } from "~/db/utils";
 import LeftSide from "../leftside/LeftSide";
-// import type { Route } from "./+types/detail";
+import { useIsAuthenticated, useUser } from "~/store/useUserStore";
 
 // 确保日期格式在服务器端和客户端一致
 function formatDate(dateString: string) {
   const date = new Date(dateString);
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).replace(/\//g, '-');
+  return date
+    .toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .replace(/\//g, "-");
 }
 
 // 获取周一凌晨0点的时间戳
@@ -40,16 +49,13 @@ export const action = async ({ request }: { request: Request }) => {
 
 export default function CurrentWeekDetail() {
   const { id } = useParams();
+  const user = useUser();
   const { data, thisWeekData } = useLoaderData<typeof loader>();
   return (
     <>
       <LeftSide entries={thisWeekData} />
       <div className="flex-1 flex flex-col gap-3 p-6">
         <div className="flex items-center">
-          {/* <Link to="/current" className="text-green-700 mb-8 w-24 p-3 rounded flex items-center gap-2">
-          <HomeIcon className="w-5 h-5" />
-          Home
-        </Link> */}
           <Link
             to="/thisweek"
             className="hamburger-item text-gray-500 cursor-pointer after:content-['/'] after:text-gray-500 after:mx-2 hover:text-gray-700 hover:underline"
@@ -66,19 +72,19 @@ export default function CurrentWeekDetail() {
               className="card card-plain p-3 border border-gray-400 rounded-lg flex flex-col gap-3"
             >
               <h2 className="text-lg font-bold">{u.project}</h2>
-              <p className="text-sm text-gray-500">
-                {formatDate(u.createdAt)}
-              </p>
+              <p className="text-sm text-gray-500">{formatDate(u.createdAt)}</p>
               <p className="text-sm text-gray-500">{u.items}</p>
-              <Form method="delete">
-                <button
-                  name="id"
-                  value={u.id}
-                  className="text-red-600  rounded-md cursor-pointer transition hover:text-red-300"
-                >
-                  delete
-                </button>
-              </Form>
+              {user?.id === u.author && (
+                <Form method="delete">
+                  <button
+                    name="id"
+                    value={u.id}
+                    className="text-red-600  rounded-md cursor-pointer transition hover:text-red-300"
+                  >
+                    delete
+                  </button>
+                </Form>
+              )}
             </div>
           ))}
         </div>

@@ -42,7 +42,6 @@ export const readDataByAuthor = async (
     date instanceof Date ? date.getTime() : new Date(date).getTime();
   return data.filter((item: any) => {
     const itemTimestamp = new Date(item.createdAt).getTime();
-    console.log(itemTimestamp, timestamp, item.author === author, item);
     return itemTimestamp >= timestamp && item.author === author;
   });
 };
