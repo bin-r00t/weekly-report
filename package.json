@@ -7,7 +7,8 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "deploy": "npm run build && cp .env ./dist/.env && cp -r build/* ./dist/build && cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json && cp server.js dist/server.js"
+    "clean": "rm -rf dist build",
+    "deploy": "npm run clean && npm run build && mkdir dist dist/build && cp .env ./dist/.env && cp -R build/* ./dist/build && cp package.json ./dist/package.json && cp package-lock.json ./dist/package-lock.json && cp server.js dist/server.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
