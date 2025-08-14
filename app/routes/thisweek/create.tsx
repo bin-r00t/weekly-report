@@ -3,7 +3,13 @@ import { readCurrentWeekData, writeData } from "~/db/utils";
 import { v4 as uuidv4 } from "uuid";
 import LeftSide from "../leftside/LeftSide";
 import { useRef, useState } from "react";
-import { useIsAuthenticated, useUser } from "~/store/useUserStore";
+import { useIsAuthenticated, useUser,useUserStore } from "~/store/useUserStore";
+import type { Route } from "./+types/create";
+
+export function meta({}: Route.MetaArgs) {
+  const user = useUserStore.getState().user;
+  return [{ title: `创建 - 嗨${user?.username}，你本周做了哪些事情?` }];
+}
 
 export const loader = async () => {
   const data = await readCurrentWeekData();

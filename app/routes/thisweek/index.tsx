@@ -1,8 +1,11 @@
 import { readCurrentWeekData } from "~/db/utils";
 import { useLoaderData } from "react-router";
 import LeftSide from "../leftside/LeftSide";
-import { useUser } from "~/store/useUserStore";
+import type { Route } from "./+types/index";
 
+export function meta({}: Route.MetaArgs) {
+  return [{ title: "首页 - 本周大家干的活" }];
+} 
 // 确保日期格式在服务器端和客户端一致
 function formatDate(dateString: string) {
   const date = new Date(dateString);

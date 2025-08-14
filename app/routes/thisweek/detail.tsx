@@ -12,8 +12,13 @@ import {
   readDataByAuthor,
 } from "~/db/utils";
 import LeftSide from "../leftside/LeftSide";
-import { useIsAuthenticated, useUser } from "~/store/useUserStore";
+import { useUser, useUserStore } from "~/store/useUserStore";
+import type { Route } from "./+types/detail";
 
+export function meta({}: Route.MetaArgs) {
+  const user = useUserStore.getState().user;
+  return [{ title: `查看 - ${user?.username}本周做了哪些事情?` }];
+}
 // 确保日期格式在服务器端和客户端一致
 function formatDate(dateString: string) {
   const date = new Date(dateString);

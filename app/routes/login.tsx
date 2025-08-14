@@ -1,6 +1,15 @@
 import { Form, Navigate, useNavigate } from "react-router";
 import { useIsAuthenticated, useUserStore } from "~/store/useUserStore";
 
+import type { Route } from "./+types/login";
+
+export function meta({}: Route.MetaArgs) {
+  return [
+    { title: "登录 - 你是谁？你的角色是什么？" },
+    { name: "description", content: "你是谁?!" },
+  ];
+}
+
 export default function Login() {
   const navigate = useNavigate();
   const isAuthenticated = useIsAuthenticated();
