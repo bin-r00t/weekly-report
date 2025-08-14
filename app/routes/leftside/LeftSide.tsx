@@ -60,10 +60,10 @@ export default function LeftSide({ entries }: { entries: any[] }) {
       if (items[0].role === "前端") {
         text += `\n${author}\n`;
         items.forEach((item: any) => {
-          text += `项目: ${item.title}\n`;
+          text += `\n项目: ${item.title}`;
           text += `${item.content}\n`;
         });
-        text += `\n\n`;
+        text += `\n`;
       }
     });
 
@@ -73,7 +73,7 @@ export default function LeftSide({ entries }: { entries: any[] }) {
       if (items[0].role === "后端") {
         text += `\n${author}\n`;
         items.forEach((item: any) => {
-          text += `项目: ${item.title}\n`;
+          text += `\n项目: ${item.title}`;
           text += `${item.content}\n`;
         });
         text += `\n\n`;
