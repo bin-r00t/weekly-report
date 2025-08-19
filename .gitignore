@@ -6,5 +6,6 @@
 /build/
 /dist/
 
+certs/
 
 data.json
